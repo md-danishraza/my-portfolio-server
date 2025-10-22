@@ -9,6 +9,9 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// trusting first proxy (Render)
+app.set("trust proxy", 1);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
