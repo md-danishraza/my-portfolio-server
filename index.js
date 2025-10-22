@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const { check, validationResult } = require("express-validator");
 const rateLimit = require("express-rate-limit");
+const { Resend } = require("resend");
 const cors = require("cors");
 
 const app = express();
@@ -66,7 +66,6 @@ app.post(
       .isLength({ min: 10 })
       .withMessage("Message must be at least 10 characters long")
       .escape(),
-    // [FYI: The stray comma that was here is removed]
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -76,42 +75,30 @@ app.post(
 
     const { name, email, message } = req.body;
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.APPPASS,
-      },
-    });
-
-    // 1. Mail to myself
-    const mailToOwnerOptions = {
-      from: `"Your Portfolio" <${process.env.EMAIL}>`,
-      to: process.env.EMAIL, // Send to yourself
-      replyTo: email,
-      subject: `Portfolio message from ${name}`,
-      text: `From: ${name} <${email}>\n\n${message}`,
-    };
-
-    // 2. Auto-reply Mail to the VISITOR
-    const autoReplyOptions = {
-      from: `"Your Name/Brand" <${process.env.EMAIL}>`,
-      to: email, // Send to the visitor
-      subject: "Thank you for your message!",
-      text: `Hi ${name},\n\nThank you for reaching out. I've received your message and will get back to you as soon as possible.\n\nBest regards,\nYour Name`,
-    };
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     try {
-      // Send both emails
-      await transporter.sendMail(mailToOwnerOptions);
-      await transporter.sendMail(autoReplyOptions);
+      // 1. Send email to YOU
+      await resend.emails.send({
+        from: "Portfolio <onboarding@resend.dev>",
+        to: process.env.EMAIL, // Your email
+        reply_to: email, // Visitor's email
+        subject: `Portfolio message from ${name}`,
+        text: `From: ${name} <${email}>\n\n${message}`,
+      });
 
-      console.log("Emails sent successfully.");
+      // 2. Send auto-reply to VISITOR
+      await resend.emails.send({
+        from: "Danish <onboarding@resend.dev>",
+        to: email, // Visitor's email
+        subject: "Thank you for your message!",
+        text: `Hi ${name},\n\nThank you for reaching out. I've received your message and will get back to you soon.\n\nBest regards,\nMd Danish Raza`,
+      });
+
+      console.log("Emails sent successfully via Resend.");
       res.send({ message: "Email sent successfully!" });
     } catch (error) {
-      console.error("Error occurred:", error);
+      console.error("Resend error:", error);
       res
         .status(500)
         .send({ message: "Error in sending email. Please try again later." });
