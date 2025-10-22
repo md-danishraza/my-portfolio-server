@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // trusting first proxy (Render)
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -34,11 +34,13 @@ app.get("/", (req, res) => {
 });
 
 const emailLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 1 day
-  max: 1, // Limit each IP to 1 requests per windowMs
-  message: "Too many email requests from this IP, please try again later.",
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 requests per 15 minutes
+  message: {
+    message:
+      "Too many requests from this IP. Please try again after 15 minutes.",
+  },
 });
-
 // Handle email sending
 app.post(
   "/send-email",
@@ -87,15 +89,15 @@ app.post(
         text: `From: ${name} <${email}>\n\n${message}`,
       });
 
-      // 2. Send auto-reply to VISITOR
-      await resend.emails.send({
-        from: "Danish <onboarding@resend.dev>",
-        to: email, // Visitor's email
-        subject: "Thank you for your message!",
-        text: `Hi ${name},\n\nThank you for reaching out. I've received your message and will get back to you soon.\n\nBest regards,\nMd Danish Raza`,
-      });
+      // // 2. Send auto-reply to VISITOR
+      // await resend.emails.send({
+      //   from: "Danish <onboarding@resend.dev>",
+      //   to: email, // Visitor's email
+      //   subject: "Thank you for your message!",
+      //   text: `Hi ${name},\n\nThank you for reaching out. I've received your message and will get back to you soon.\n\nBest regards,\nMd Danish Raza`,
+      // });
 
-      console.log("Emails sent successfully via Resend.");
+      // console.log("Emails sent successfully via Resend.");
       res.send({ message: "Email sent successfully!" });
     } catch (error) {
       console.error("Resend error:", error);
