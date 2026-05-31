@@ -12,12 +12,14 @@ import Footer from "./components/Footer";
 import AnimatedBackground, {
   ThemeProvider,
 } from "./components/DotGrid/AnimatedBackground";
+import CustomCursor from "./components/Cursor/AnimatedCursor";
 
 // App content that uses theme
 const AppContent = () => {
   return (
     <main role="main">
       <AnimatedBackground />
+      <CustomCursor />
       <Navbar />
       <Hero />
 

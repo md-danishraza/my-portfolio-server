@@ -1,0 +1,53 @@
+/* src/components/AnimatedCursor/AnimatedCursor.css */
+
+/* Target the cursor wrapper to give it a higher z-index */
+#cursor {
+    z-index: 999999 !important; /* Increased from 9999 to 999999 */
+  position: fixed !important; /* Ensure it stays fixed */
+  pointer-events: none !important; /* So clicks pass through to elements below */
+  }
+  
+  /* Shared styles for both inner and outer cursor */
+  #cursor-inner,
+  #cursor-outer {
+    transition: transform 0.15s ease-out, opacity 0.3s ease-in-out;
+    z-index: 999999 !important;
+  position: fixed !important;
+  pointer-events: none !important;
+  }
+  
+  /* Style for the inner dot */
+  #cursor-inner {
+    background-color: var(--highlight) !important;
+    box-shadow: 0 0 8px var(--highlight);
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Style for the outer ring */
+  #cursor-outer {
+    background-color: rgba(128, 128, 128, 0.1) !important;
+    border: 1px solid var(--highlight) !important;
+    box-sizing: border-box;
+    backdrop-filter: blur(2px);
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Dark theme specific adjustments */
+  body.dark #cursor-inner {
+    box-shadow: 0 0 12px greenyellow;
+  }
+  
+  body.dark #cursor-outer {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-color: greenyellow !important;
+  }
+  
+  /* Light theme specific adjustments */
+  body.light #cursor-inner {
+    box-shadow: 0 0 8px #ff006e;
+  }
+  
+  body.light #cursor-outer {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: #ff006e !important;
+  }

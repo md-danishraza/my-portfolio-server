@@ -12,6 +12,7 @@
     "@apollo/client": "^4.1.5",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "animated-cursor": "^1.2.0",
     "axios": "^1.13.5",
     "contentful": "^9.3.5",
     "dotenv": "^16.4.7",
