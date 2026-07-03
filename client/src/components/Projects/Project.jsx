@@ -52,9 +52,7 @@ function Project() {
           <h1 className={styles["section-title"]}>
             <span className={styles["title-highlight"]}>My</span> Projects
           </h1>
-          <p className={styles["section-subtitle"]}>
-            Resourced using CMS • Showcasing my best work
-          </p>
+          <p className={styles["section-subtitle"]}>Showcasing my best work</p>
         </div>
 
         <div className={styles["filter-wrapper"]}>
