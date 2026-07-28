@@ -6,7 +6,9 @@ import {
   FaInstagramSquare,
   FaTimes,
   FaBars,
+  FaCodeBranch
 } from "../icons";
+import { SiLeetcode } from 'react-icons/si';
 import GlowingCircleTheme from "../Theme/GlowingCircleTheme";
 import styles from "./Navbar.module.css";
 
@@ -42,6 +44,15 @@ function Navbar() {
   return (
     <div className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.links}>
+        <a
+          href="https://leetcode.com/u/md-danishraza/"
+          title="Leetcode"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {/* <FaLeetco  /> */}
+          <SiLeetcode className={styles.icon} />;
+        </a>
         <a
           href="https://github.com/md-danishraza"
           title="github"
